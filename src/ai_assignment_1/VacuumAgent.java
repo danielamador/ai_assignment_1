@@ -9,7 +9,10 @@ public class VacuumAgent
 	private int steps;
 	public static int BAG_CAPACITY = 50;
 	
-	private java.util.ListIterator<Cell> actualRoomReference;
+	//this iterator will keep the current Environment room position. By using an iterator
+	//you can assure that the vacuum cleaner doesn't know the whole environment size before
+	//exploring it. The navigation through the rooms will happen by using the iterator
+	private java.util.ListIterator<Cell> currentRoom;
 	public class memCell extends Cell
 	{
 		private boolean firstLeft;
@@ -34,7 +37,8 @@ public class VacuumAgent
 	{
 		System.out.println("Vacuum says: Hello human! I'm ready to work!");
 		
-		actualRoomReference = environment.rooms.listIterator(initialEnvRoom);
+		//iterator starts in the room provided, surely, if the room exists.
+		currentRoom = environment.rooms.listIterator(initialEnvRoom);
 		
 		if(initialEnvRoom > environment.rooms.size())
 		{

@@ -4,7 +4,8 @@ import java.util.Vector;
 public class Environment 
 {
 		
-	//private int numberOfRooms;
+	//These attributes are public to approach this implementation to domain's problem.
+	//If we think a physical space, every entity can access and change its attributes.
 	public Vector<Cell> rooms;
 	public String envName;
 	

@@ -1,12 +1,14 @@
 package ai_assignment_1;
 import java.util.Vector;
 
-public class VacuumAgent {
+public class VacuumAgent 
+{
 	private int score;
 	private int steps;
 	public static int BAG_CAPACITY = 50;
 	
-	public class memCell extends Cell{
+	public class memCell extends Cell
+	{
 		public boolean firstLeft;
 		public boolean lastRight;
 	};

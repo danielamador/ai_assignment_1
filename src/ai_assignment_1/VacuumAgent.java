@@ -8,18 +8,7 @@ public class VacuumAgent
 	private int score;
 	private int steps;
 	public static int BAG_CAPACITY = 50;
-	
-	//this iterator will keep the current Environment room position. By using an iterator
-	//you can assure that the vacuum cleaner doesn't know the whole environment size before
-	//exploring it. The navigation through the rooms will happen by using the iterator
-	private java.util.ListIterator<Cell> currentRoom;
-	public class memCell extends Cell
-	{
-		private boolean firstLeft;
-		private boolean lastRight;
-	};
-	
-	private Vector<memCell> memory;
+	private Vector<Cell> memory;
 	
 	private void checkEnvironmentCellState(){}
 	private void replaceBag(){}
@@ -30,15 +19,13 @@ public class VacuumAgent
 	
 	public VacuumAgent()
 	{
-		memory = new Vector<memCell>();
+		memory = new Vector<Cell>();
 	}
 	
-	public void start(Environment environment, int initialEnvRoom)
+	public void start(PhysicalEnvironment environment, int initialEnvRoom)
 	{
 		System.out.println("Vacuum says: Hello human! I'm ready to work!");
 		
-		//iterator starts in the room provided, surely, if the room exists.
-		currentRoom = environment.rooms.listIterator(initialEnvRoom);
 		
 		if(initialEnvRoom > environment.rooms.size())
 		{
@@ -47,10 +34,6 @@ public class VacuumAgent
 			return;
 		}
 		
-		memory.add(new memCell());
-		memory.elementAt(0).state = environment.rooms.elementAt(initialEnvRoom).state;
-		memory.elementAt(0).label = environment.rooms.elementAt(initialEnvRoom).label;
-		printMemoryContent();
 	}
 	
 	public void stop(){}
@@ -64,10 +47,6 @@ public class VacuumAgent
 				System.out.print("Dirty");
 			else
 				System.out.print("Clean");
-			if (memory.elementAt(i).firstLeft)
-				System.out.print("   IS FIRST LEFT!\n");
-			if (memory.elementAt(i).lastRight)
-				System.out.print("   IS LAST RIGHT!\n");
 				
 		}
 	}

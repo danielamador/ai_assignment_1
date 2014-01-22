@@ -5,9 +5,11 @@ public class MainClass
 
 	public static void main(String[] args) 
 	{
-		Environment environment = new Environment(2, "My home");
+		PhysicalEnvironment physEnv = new PhysicalEnvironment("My home");
+		physEnv.insertCell(0, POSITIONS_FLAGS.RIGHT);
+		physEnv.printCells();
 		VacuumAgent vacuum = new VacuumAgent();
-		vacuum.start(environment, 0);
+		vacuum.start(physEnv, 0);
 	}
 
 }

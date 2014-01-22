@@ -15,9 +15,9 @@ public class PhysicalEnvironment extends AbstractEnvironment
 		{
 			System.out.println("Cell " + i + " (" + rooms.elementAt(i).label + "): ");
 			if (rooms.elementAt(i).state == true)
-				System.out.print("Dirty\n");
+				System.out.print("\tDirty\n");
 			else
-				System.out.print("Clean\n");
+				System.out.print("\tClean\n");
 		}
 	}
 	

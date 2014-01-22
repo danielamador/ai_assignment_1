@@ -8,7 +8,59 @@ public class VacuumAgent
 	private int score;
 	private int steps;
 	public static int BAG_CAPACITY = 50;
-	private Vector<Cell> memory;
+	private Memory memory;
+	
+	//This subclass will be the Vacuums memory. It will store and model it's memory
+	//while it will discovering a physical Environment
+	private class Memory extends AbstractEnvironment
+	{
+		Cell currentCell;
+		
+		public Memory()
+		{
+			super();
+		}
+		
+		public void printAdjacencyCellState(Cell cell)
+		{
+			if(cell.adjacencyExistanceFlag[0] == false)
+				System.out.println("\tUP side unknown");
+			else
+				System.out.println("\tCell " + cell.nextUp.label + " on TOP");
+			
+			if(cell.adjacencyExistanceFlag[1] == false)
+				System.out.println("\tLEFT side unknown");
+			else
+				System.out.println("\tCell " + cell.nextLeft.label + " at LEFT");
+			
+			if(cell.adjacencyExistanceFlag[2] == false)
+				System.out.println("\tDOWN side unknown");
+			else
+				System.out.println("\tCell " + cell.nextLeft.label + " BELOW");
+			
+			if(cell.adjacencyExistanceFlag[3] == false)
+				System.out.println("\tRIGHT side unknown");
+			else
+				System.out.println("\tCell " + cell.nextLeft.label + " at RIGHT");
+		}
+		
+		@Override
+		public void printCells() 
+		{
+			System.out.println("Vacuum says: Look what I have in my memory:");
+			for (int i = 0; i < rooms.size(); ++i)
+			{
+				System.out.println("Cell " + i + " (" + rooms.elementAt(i).label + "): ");
+				if (rooms.elementAt(i).state == true)
+					System.out.print("\tDirty\n");
+				else
+					System.out.print("\tClean\n");
+				
+				printAdjacencyCellState(rooms.elementAt(i));
+			}
+		}
+		
+	}
 	
 	private void checkEnvironmentCellState(){}
 	private void replaceBag(){}
@@ -19,7 +71,7 @@ public class VacuumAgent
 	
 	public VacuumAgent()
 	{
-		memory = new Vector<Cell>();
+		memory = new Memory();
 	}
 	
 	public void start(PhysicalEnvironment environment, int initialEnvRoom)
@@ -36,19 +88,8 @@ public class VacuumAgent
 		
 	}
 	
+	public void showMemory(){memory.printCells();}
+	
 	public void stop(){}
-	public void printMemoryContent()
-	{
-		System.out.println("Vacuum Memory: ");
-		for (int i = 0; i < memory.size(); ++i)
-		{
-			System.out.println("Cell " + i + " (" + memory.elementAt(i).label + "): ");
-			if (memory.elementAt(i).state == true)
-				System.out.print("Dirty");
-			else
-				System.out.print("Clean");
-				
-		}
-	}
 	public void showPerformance(){}
 }

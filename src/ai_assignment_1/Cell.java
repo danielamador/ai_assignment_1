@@ -12,9 +12,17 @@ public class Cell {
 	//inheritance there to create just one attribute
 	//0 UP - 1 LEFT - 2 DOWN - 3 RIGHT
 	boolean adjacencyExistanceFlag [];
+	boolean checkedAdjacency [];
 	
 	public Cell ()
 	{
 		adjacencyExistanceFlag = new boolean [4];
+		checkedAdjacency = new boolean [4];
+		
+		for (int i=0; i < 4; ++i)
+		{
+			adjacencyExistanceFlag[i] = false;
+			checkedAdjacency[i] = false;
+		}
 	}
 }

@@ -36,13 +36,13 @@ public class PhysicalEnvironment extends AbstractEnvironment
 	}
 	
 	@Override
-	public void insertCell(int position, POSITIONS_FLAGS flag)
+	public Cell insertCell(int position, POSITIONS_FLAGS flag)
 	{
 		//If we have time, change this for one exception later
 		if(position > rooms.size())
 		{
 			System.out.println("Invalid Cell Position!");
-			return;
+			return null;
 		}
 		
 		rooms.add(new Cell());
@@ -76,6 +76,9 @@ public class PhysicalEnvironment extends AbstractEnvironment
 					"inserted at the right from Cell " + rooms.elementAt(position).label + "!");
 			
 		}
+		
+		return rooms.elementAt(currentLastPosition);//returns the reference of the last cell added
+
 	}
 	
 	public void generateDirt()

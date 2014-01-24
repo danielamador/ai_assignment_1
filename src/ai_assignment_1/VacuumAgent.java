@@ -1,6 +1,8 @@
 package ai_assignment_1;
 import java.util.Vector;
 
+import sun.security.provider.certpath.AdjacencyList;
+
 import com.sun.xml.internal.bind.v2.runtime.reflect.ListIterator;
 
 public class VacuumAgent 
@@ -15,6 +17,8 @@ public class VacuumAgent
 	private class Memory extends AbstractEnvironment
 	{
 		Cell currentCell;
+		//this reference will be needed to read the state of the physical environment
+		Cell physicalCellReference;
 		
 		public Memory()
 		{
@@ -66,8 +70,87 @@ public class VacuumAgent
 	private void replaceBag(){}
 	private void suck(){}
 	private void noOp(){}
-	private void moveLeft(){}
-	private void moveRight(){}
+	
+	//This is public just for testing purposes. It will be private later
+	public void moveRandDirection()
+	{
+		int dir = memory.generateRand0_3();
+		System.out.println("DEBUG: Generated number 0_3: " + dir);
+		POSITIONS_FLAGS flag = null;
+		
+		System.out.println("Vacuum says: I'll move to a random direction");
+		
+		switch(dir)
+		{
+			case 0:
+				flag = POSITIONS_FLAGS.UP;
+				System.out.println("\tMove UP");
+				break;
+			case 1:
+				flag = POSITIONS_FLAGS.LEFT;
+				System.out.println("\tMove LEFT");
+				break;
+			case 2:
+				flag = POSITIONS_FLAGS.DOWN;
+				System.out.println("\tMove DOWN");
+				break;
+			case 3:
+				flag = POSITIONS_FLAGS.RIGHT;
+				System.out.println("\tMove RIGHT");
+				break;
+		}
+		
+		//if the vacuum knows the next cell in the direction, just move to there
+		System.out.println("\tDEBUG: checkedAdjacency[dir]: " + memory.currentCell.checkedAdjacency[dir]);
+		if(memory.currentCell.checkedAdjacency[dir] == true)
+		{
+			System.out.println("\tI know this direction already!");
+			if (flag == POSITIONS_FLAGS.UP)
+			{
+				memory.currentCell = memory.currentCell.nextUp;
+			}
+			else if(flag == POSITIONS_FLAGS.LEFT)
+				memory.currentCell = memory.currentCell.nextLeft;
+			else if(flag == POSITIONS_FLAGS.DOWN)
+				memory.currentCell = memory.currentCell.nextDown;
+			else
+				memory.currentCell = memory.currentCell.nextRight;
+			//memory.currentCell =  memory.insertCell(memory.rooms.size(), flag);
+		}
+		//else, you must check if there's room in the chosen direction. If is there, you
+		//must insert this new cell in the memory
+		else
+		{
+			System.out.println("\tI still don't know this direction! Let's try!");
+			
+			memory.currentCell.checkedAdjacency[dir] = true;
+			if (flag == POSITIONS_FLAGS.UP)
+			{
+				if(memory.physicalCellReference.nextUp != null)
+				{
+					memory.currentCell.adjacencyExistanceFlag[dir] = true;
+					//alloc a new cell up
+					memory.currentCell.nextUp = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					//now the current cell and reference are on the respective cells above
+					memory.physicalCellReference = memory.physicalCellReference.nextUp;
+					memory.currentCell = memory.currentCell.nextUp;
+					
+					System.out.println("\tI could move up with no problems");
+				}
+				
+				else
+					System.out.println("\tOUCH! There's a wall towards this direction");
+			}
+				
+			else if(flag == POSITIONS_FLAGS.LEFT)
+				memory.currentCell = memory.currentCell.nextLeft;
+			else if(flag == POSITIONS_FLAGS.DOWN)
+				memory.currentCell = memory.currentCell.nextDown;
+			else
+				memory.currentCell = memory.currentCell.nextRight;
+			
+		}
+	}
 	
 	public VacuumAgent()
 	{
@@ -81,11 +164,12 @@ public class VacuumAgent
 		
 		if(initialEnvRoom > environment.rooms.size())
 		{
-			System.out.println("Vacuum couldn't have been initialised. The referenced " +
+			System.out.println("Vacuum couldn't be initialised. The referenced " +
 					"room doesn't exist");
 			return;
 		}
-		
+		memory.currentCell = memory.rooms.elementAt(0);
+		memory.physicalCellReference = environment.rooms.elementAt(initialEnvRoom);
 	}
 	
 	public void showMemory(){memory.printCells();}

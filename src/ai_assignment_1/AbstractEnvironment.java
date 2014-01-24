@@ -19,20 +19,33 @@ abstract public class AbstractEnvironment
 			return true;
 	}
 	
+	public int generateRand0_3()
+	{
+		double temp;
+		temp = Math.random();
+		if(temp < 0.25)
+			return 0;
+		else if(temp > 0.25 && temp < 0.5)
+			return 1;
+		else if(temp > 0.5 && temp < 0.75)
+			return 2;
+		else
+			return 3;
+	}
+	
 	public AbstractEnvironment()
 	{
 		rooms = new Vector<Cell>();
 		rooms.add(new Cell());
-		rooms.elementAt(0).state = generateRandBool();
 	}
 	
-	public void insertCell(int position, POSITIONS_FLAGS flag)
+	public Cell insertCell(int position, POSITIONS_FLAGS flag)
 	{
 		//If we have time, change this for one exception later
 		if(position > rooms.size())
 		{
 			System.out.println("Invalid Cell Position!");
-			return;
+			return null;
 		}
 		
 		rooms.add(new Cell());
@@ -64,6 +77,8 @@ abstract public class AbstractEnvironment
 					"inserted at the right from Cell " + rooms.elementAt(position).label + "!");
 			
 		}
+		
+		return rooms.elementAt(currentLastPosition);//returns the reference of the last cell added
 	}
 	
 }

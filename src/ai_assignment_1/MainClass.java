@@ -10,7 +10,7 @@ public class MainClass
 		physEnv.printCells();
 		VacuumAgent vacuum = new VacuumAgent();
 		vacuum.start(physEnv, 0);
-		vacuum.showMemory();
+		vacuum.moveRandDirection();
 	}
 
 }

@@ -41,7 +41,6 @@ abstract public class AbstractEnvironment
 	
 	public Cell insertCell(int position, POSITIONS_FLAGS flag)
 	{
-		//If we have time, change this for one exception later
 		if(position > rooms.size())
 		{
 			System.out.println("Invalid Cell Position!");
@@ -55,24 +54,28 @@ abstract public class AbstractEnvironment
 		if(flag == POSITIONS_FLAGS.UP)
 		{
 			rooms.elementAt(position).nextUp = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextDown = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted above Cell " + rooms.elementAt(position).label + "!");
 		}
 		else if(flag == POSITIONS_FLAGS.LEFT)
 		{
 			rooms.elementAt(position).nextLeft = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextRight = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted at the left from Cell " + rooms.elementAt(position).label + "!");
 		}
 		else if(flag == POSITIONS_FLAGS.DOWN)
 		{
 			rooms.elementAt(position).nextDown = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextUp = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted below Cell " + rooms.elementAt(position).label + "!");
 		}
 		else
 		{
 			rooms.elementAt(position).nextRight = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextLeft = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted at the right from Cell " + rooms.elementAt(position).label + "!");
 			

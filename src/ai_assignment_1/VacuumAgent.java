@@ -137,18 +137,51 @@ public class VacuumAgent
 					
 					System.out.println("\tI could move up with no problems");
 				}
-				
 				else
-					System.out.println("\tOUCH! There's a wall towards this direction");
+					System.out.println("\tOUCH! Trying to go UP, I just crashed a wall!");
 			}
-				
-			else if(flag == POSITIONS_FLAGS.LEFT)
-				memory.currentCell = memory.currentCell.nextLeft;
-			else if(flag == POSITIONS_FLAGS.DOWN)
-				memory.currentCell = memory.currentCell.nextDown;
-			else
-				memory.currentCell = memory.currentCell.nextRight;
+	
+			else if (flag == POSITIONS_FLAGS.LEFT)
+			{
+				if(memory.physicalCellReference.nextLeft != null)
+				{
+					memory.currentCell.adjacencyExistanceFlag[dir] = true;
+					memory.currentCell.nextLeft = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.physicalCellReference = memory.physicalCellReference.nextLeft;
+					memory.currentCell = memory.currentCell.nextLeft;	
+					System.out.println("\tI could move left with no problems");
+				}	
+				else
+					System.out.println("\tOUCH! Trying to go LEFT, I just crashed a wall!");
+			}
 			
+			else if (flag == POSITIONS_FLAGS.DOWN)
+			{
+				if(memory.physicalCellReference.nextDown != null)
+				{
+					memory.currentCell.adjacencyExistanceFlag[dir] = true;
+					memory.currentCell.nextDown = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.physicalCellReference = memory.physicalCellReference.nextDown;
+					memory.currentCell = memory.currentCell.nextDown;	
+					System.out.println("\tI could move left with no problems");
+				}	
+				else
+					System.out.println("\tOUCH! Trying to go DOWN, I just crashed a wall!");
+			}
+			
+			else
+			{
+				if(memory.physicalCellReference.nextDown != null)
+				{
+					memory.currentCell.adjacencyExistanceFlag[dir] = true;
+					memory.currentCell.nextDown = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.physicalCellReference = memory.physicalCellReference.nextDown;
+					memory.currentCell = memory.currentCell.nextDown;	
+					System.out.println("\tI could move left with no problems");
+				}	
+				else
+					System.out.println("\tOUCH! Trying to go DOWN, I just crashed a wall!");
+			}
 		}
 	}
 	

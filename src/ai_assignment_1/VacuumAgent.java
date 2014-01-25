@@ -64,6 +64,29 @@ public class VacuumAgent
 			}
 		}
 		
+		public boolean knowsWholeEnvironment()
+		{
+			for (int i = 0; i < rooms.size(); ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					if(rooms.elementAt(i).checkedAdjacency[j] == false)
+						return false;
+				}
+			}
+			return true;
+		}
+		
+		public boolean isEverythingClean()
+		{
+			for (int i = 0; i < rooms.size(); ++i)
+			{
+				if(rooms.elementAt(i).state == false)
+					return false;
+			}
+			return true;
+		}
+		
 	}
 	
 	private void checkEnvironmentCellState(){}
@@ -203,6 +226,8 @@ public class VacuumAgent
 		}
 		memory.currentCell = memory.rooms.elementAt(0);
 		memory.physicalCellReference = environment.rooms.elementAt(initialEnvRoom);
+		System.out.println("Knows whole environment: " + memory.knowsWholeEnvironment());
+		System.out.println("Is everything clean : " + memory.isEverythingClean());
 	}
 	
 	public void showMemory(){memory.printCells();}

@@ -9,6 +9,7 @@ public class VacuumAgent
 {
 	private int score;
 	private int steps;
+	public static int TOTAL_STEPS = 1000;
 	public static int BAG_CAPACITY = 50;
 	private Memory memory;
 	
@@ -27,25 +28,48 @@ public class VacuumAgent
 		
 		public void printAdjacencyCellState(Cell cell)
 		{
-			if(cell.adjacencyExistanceFlag[0] == false)
+			//UP
+			if(cell.checkedAdjacency[0] == false)
 				System.out.println("\tUP side unknown");
 			else
-				System.out.println("\tCell " + cell.nextUp.label + " on TOP");
-			
-			if(cell.adjacencyExistanceFlag[1] == false)
+			{
+				if(cell.adjacencyExistanceFlag[0] == false)
+					System.out.println("\tThere's a wall on TOP");
+				else
+					System.out.println("\tCell " + cell.nextUp.label + " on TOP");
+			}
+			//LEFT
+			if(cell.checkedAdjacency[1] == false)
 				System.out.println("\tLEFT side unknown");
 			else
-				System.out.println("\tCell " + cell.nextLeft.label + " at LEFT");
-			
-			if(cell.adjacencyExistanceFlag[2] == false)
-				System.out.println("\tDOWN side unknown");
+			{
+				if(cell.adjacencyExistanceFlag[1] == false)
+					System.out.println("\tThere's a wall at LEFT");
+				else
+					System.out.println("\tCell " + cell.nextLeft.label + " at LEFT");
+			}
+			//DOWN
+			if(cell.checkedAdjacency[2] == false)
+				System.out.println("\tDown side unknown");
 			else
-				System.out.println("\tCell " + cell.nextDown.label + " BELOW");
-			
-			if(cell.adjacencyExistanceFlag[3] == false)
-				System.out.println("\tRIGHT side unknown");
+			{
+				if(cell.adjacencyExistanceFlag[2] == false)
+					System.out.println("\tThere's a wall BELOW");
+				else
+					System.out.println("\tCell " + cell.nextDown.label + " BELOW");
+			}
+			//RIGHT
+			if(cell.checkedAdjacency[3] == false)
+				System.out.println("\tRight side unknown");
 			else
-				System.out.println("\tCell " + cell.nextRight.label + " at RIGHT");
+			{
+				if(cell.adjacencyExistanceFlag[3] == false)
+					System.out.println("\tThere's a wall at RIGHT");
+				else
+					System.out.println("\tCell " + cell.nextRight.label + " at Right");
+			}
+			
+			
 		}
 		
 		@Override
@@ -109,7 +133,8 @@ public class VacuumAgent
 	}
 	
 	//This is public just for testing purposes. It will be private later
-	public void moveRandDirection()
+	//true if can move to another room, false if hits a wall
+	public boolean moveRandDirection()
 	{
 		int dir = memory.generateRand0_3();
 		System.out.println("DEBUG: Generated number 0_3: " + dir);
@@ -139,20 +164,28 @@ public class VacuumAgent
 		
 		//if the vacuum knows the next cell in the direction, just move to there
 		System.out.println("\tDEBUG: checkedAdjacency[dir]: " + memory.currentCell.checkedAdjacency[dir]);
+		steps++;
 		if(memory.currentCell.checkedAdjacency[dir] == true)
 		{
 			System.out.println("\tI know this direction already!");
-			if (flag == POSITIONS_FLAGS.UP)
+			if(memory.currentCell.adjacencyExistanceFlag[dir] == false)
 			{
-				memory.currentCell = memory.currentCell.nextUp;
+				System.out.println("There's a wall, so I won't move.");
+				return false;
 			}
-			else if(flag == POSITIONS_FLAGS.LEFT)
-				memory.currentCell = memory.currentCell.nextLeft;
-			else if(flag == POSITIONS_FLAGS.DOWN)
-				memory.currentCell = memory.currentCell.nextDown;
 			else
-				memory.currentCell = memory.currentCell.nextRight;
-			//memory.currentCell =  memory.insertCell(memory.rooms.size(), flag);
+			{
+				if (flag == POSITIONS_FLAGS.UP)
+					memory.currentCell = memory.currentCell.nextUp;
+				else if(flag == POSITIONS_FLAGS.LEFT)
+					memory.currentCell = memory.currentCell.nextLeft;
+				else if(flag == POSITIONS_FLAGS.DOWN)
+					memory.currentCell = memory.currentCell.nextDown;
+				else
+					memory.currentCell = memory.currentCell.nextRight;
+				return true;
+			}
+			
 		}
 		//else, you must check if there's room in the chosen direction. If is there, you
 		//must insert this new cell in the memory
@@ -177,9 +210,13 @@ public class VacuumAgent
 					memory.currentCell = memory.currentCell.nextUp;
 					
 					System.out.println("\tI could move up with no problems");
+					return true;
 				}
 				else
+				{
 					System.out.println("\tOUCH! Trying to go UP, I just crashed a wall!");
+					return false;
+				}
 			}
 	
 			else if (flag == POSITIONS_FLAGS.LEFT)
@@ -194,9 +231,13 @@ public class VacuumAgent
 					memory.currentCell = memory.currentCell.nextLeft;
 					
 					System.out.println("\tI could move left with no problems");
+					return true;
 				}	
 				else
+				{
 					System.out.println("\tOUCH! Trying to go LEFT, I just crashed a wall!");
+					return false;
+				}
 			}
 			
 			else if (flag == POSITIONS_FLAGS.DOWN)
@@ -211,9 +252,13 @@ public class VacuumAgent
 					memory.currentCell = memory.currentCell.nextDown;
 					
 					System.out.println("\tI could move down with no problems");
+					return true;
 				}	
 				else
+				{	
 					System.out.println("\tOUCH! Trying to go DOWN, I just crashed a wall!");
+					return false;
+				}
 			}
 			
 			else
@@ -228,11 +273,16 @@ public class VacuumAgent
 					memory.currentCell = memory.currentCell.nextRight;
 					
 					System.out.println("\tI could move right with no problems");
+					return true;
 				}	
 				else
+				{
 					System.out.println("\tOUCH! Trying to go RIGHT, I just crashed a wall!");
+					return false;
+				}
 			}
 		}
+		
 	}
 	
 	public VacuumAgent()
@@ -243,8 +293,7 @@ public class VacuumAgent
 	public void start(PhysicalEnvironment environment, int initialEnvRoom)
 	{
 		System.out.println("Vacuum says: Hello human! I'm ready to work!");
-		
-		
+			
 		if(initialEnvRoom > environment.rooms.size())
 		{
 			System.out.println("Vacuum couldn't be initialised. The referenced " +
@@ -254,8 +303,29 @@ public class VacuumAgent
 		memory.currentCell = memory.rooms.elementAt(0);
 		memory.physicalCellReference = environment.rooms.elementAt(initialEnvRoom);
 		//Don't forget the label
-		memory.rooms.elementAt(0).label = memory.physicalCellReference.label;
+		checkEnvironmentCellState();
 		memory.printCells();
+		//main loop
+		System.out.println(memory.isEverythingClean());
+		while(!memory.isEverythingClean() || !memory.knowsWholeEnvironment())
+		{
+			System.out.println("DEBUG: isEverythingClean: " + memory.isEverythingClean());
+			System.out.println("DEBUG: knowsWholeEnvironment: " + memory.knowsWholeEnvironment());
+			boolean movState;
+			movState = moveRandDirection();
+			if(movState == true)
+			{
+				checkEnvironmentCellState();
+				if(memory.currentCell.state == true)
+					suck();
+			}
+			else
+				noOp();
+			
+			System.out.println("Vacuum says: Memory after this round:");
+			memory.printCells();
+		}
+		
 	}
 	
 	public void showMemory(){memory.printCells();}

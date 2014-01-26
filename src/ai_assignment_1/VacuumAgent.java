@@ -9,7 +9,7 @@ public class VacuumAgent
 {
 	private int score;
 	private int steps;
-	public static int TOTAL_STEPS = 10;
+	public static int TOTAL_STEPS = 1000;
 	public static int BAG_CAPACITY = 50;
 	private Memory memory;
 	
@@ -323,7 +323,7 @@ public class VacuumAgent
 		checkEnvironmentCellState();
 		memory.printCells();
 		//main loop
-		while(!memory.isEverythingClean() || !memory.knowsWholeEnvironment() || steps < TOTAL_STEPS)
+		while((!memory.isEverythingClean() || !memory.knowsWholeEnvironment()) && steps < TOTAL_STEPS)
 		{
 			System.out.println("DEBUG: isEverythingClean: " + memory.isEverythingClean());
 			System.out.println("DEBUG: knowsWholeEnvironment: " + memory.knowsWholeEnvironment());
@@ -346,6 +346,9 @@ public class VacuumAgent
 			new java.util.Scanner(System.in).nextLine();
 		}
 		System.out.println("Vacuum says: I'm done in cleaning!");
+		System.out.println("Performance: " + steps + " steps\n" + score + " sucks");
+		float effect = (score/(float)steps) * 100;
+		System.out.println("Effectiveness: " + (effect) + "%");
 	}
 	
 	public void showMemory(){memory.printCells();}

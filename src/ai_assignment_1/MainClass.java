@@ -11,6 +11,8 @@ public class MainClass
 		VacuumAgent vacuum = new VacuumAgent();
 		vacuum.start(physEnv, 0);
 		vacuum.moveRandDirection();
+		vacuum.checkEnvironmentCellState();
+		vacuum.showMemory();
 	}
 
 }

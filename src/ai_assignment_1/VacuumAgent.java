@@ -40,7 +40,7 @@ public class VacuumAgent
 			if(cell.adjacencyExistanceFlag[2] == false)
 				System.out.println("\tDOWN side unknown");
 			else
-				System.out.println("\tCell " + cell.nextLeft.label + " BELOW");
+				System.out.println("\tCell " + cell.nextDown.label + " BELOW");
 			
 			if(cell.adjacencyExistanceFlag[3] == false)
 				System.out.println("\tRIGHT side unknown");
@@ -89,10 +89,24 @@ public class VacuumAgent
 		
 	}
 	
-	private void checkEnvironmentCellState(){}
+	public void checkEnvironmentCellState()
+	{
+		memory.currentCell.label = memory.physicalCellReference.label;
+		memory.currentCell.state = memory.physicalCellReference.state;
+	}
 	private void replaceBag(){}
-	private void suck(){}
-	private void noOp(){}
+	private void suck()
+	{
+		System.out.println("Vacuum says: CLEANING...");
+		steps++;
+		score++;
+	}
+	
+	private void noOp()
+	{
+		System.out.println("Vacuum says: I'll do nothing this time");
+		steps++;
+	}
 	
 	//This is public just for testing purposes. It will be private later
 	public void moveRandDirection()
@@ -153,7 +167,11 @@ public class VacuumAgent
 				{
 					memory.currentCell.adjacencyExistanceFlag[dir] = true;
 					//alloc a new cell up
-					memory.currentCell.nextUp = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					
+					memory.currentCell.nextUp.checkedAdjacency[2] = true;
+					memory.currentCell.nextUp.adjacencyExistanceFlag[2] = true;
+					
 					//now the current cell and reference are on the respective cells above
 					memory.physicalCellReference = memory.physicalCellReference.nextUp;
 					memory.currentCell = memory.currentCell.nextUp;
@@ -169,9 +187,12 @@ public class VacuumAgent
 				if(memory.physicalCellReference.nextLeft != null)
 				{
 					memory.currentCell.adjacencyExistanceFlag[dir] = true;
-					memory.currentCell.nextLeft = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.currentCell.nextLeft.checkedAdjacency[3] = true;
+					memory.currentCell.nextLeft.adjacencyExistanceFlag[3] = true;
 					memory.physicalCellReference = memory.physicalCellReference.nextLeft;
-					memory.currentCell = memory.currentCell.nextLeft;	
+					memory.currentCell = memory.currentCell.nextLeft;
+					
 					System.out.println("\tI could move left with no problems");
 				}	
 				else
@@ -183,10 +204,13 @@ public class VacuumAgent
 				if(memory.physicalCellReference.nextDown != null)
 				{
 					memory.currentCell.adjacencyExistanceFlag[dir] = true;
-					memory.currentCell.nextDown = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.currentCell.nextDown.checkedAdjacency[0] = true;
+					memory.currentCell.nextUp.adjacencyExistanceFlag[0] = true;
 					memory.physicalCellReference = memory.physicalCellReference.nextDown;
-					memory.currentCell = memory.currentCell.nextDown;	
-					System.out.println("\tI could move left with no problems");
+					memory.currentCell = memory.currentCell.nextDown;
+					
+					System.out.println("\tI could move down with no problems");
 				}	
 				else
 					System.out.println("\tOUCH! Trying to go DOWN, I just crashed a wall!");
@@ -194,16 +218,19 @@ public class VacuumAgent
 			
 			else
 			{
-				if(memory.physicalCellReference.nextDown != null)
+				if(memory.physicalCellReference.nextRight != null)
 				{
 					memory.currentCell.adjacencyExistanceFlag[dir] = true;
-					memory.currentCell.nextDown = memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
-					memory.physicalCellReference = memory.physicalCellReference.nextDown;
-					memory.currentCell = memory.currentCell.nextDown;	
-					System.out.println("\tI could move left with no problems");
+					memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
+					memory.currentCell.nextRight.checkedAdjacency[3] = true;
+					memory.currentCell.nextRight.adjacencyExistanceFlag[3] = true;
+					memory.physicalCellReference = memory.physicalCellReference.nextRight;
+					memory.currentCell = memory.currentCell.nextRight;
+					
+					System.out.println("\tI could move right with no problems");
 				}	
 				else
-					System.out.println("\tOUCH! Trying to go DOWN, I just crashed a wall!");
+					System.out.println("\tOUCH! Trying to go RIGHT, I just crashed a wall!");
 			}
 		}
 	}
@@ -226,8 +253,9 @@ public class VacuumAgent
 		}
 		memory.currentCell = memory.rooms.elementAt(0);
 		memory.physicalCellReference = environment.rooms.elementAt(initialEnvRoom);
-		System.out.println("Knows whole environment: " + memory.knowsWholeEnvironment());
-		System.out.println("Is everything clean : " + memory.isEverythingClean());
+		//Don't forget the label
+		memory.rooms.elementAt(0).label = memory.physicalCellReference.label;
+		memory.printCells();
 	}
 	
 	public void showMemory(){memory.printCells();}

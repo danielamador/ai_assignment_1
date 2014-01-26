@@ -18,7 +18,33 @@ public class PhysicalEnvironment extends AbstractEnvironment
 				System.out.print("\tDirty\n");
 			else
 				System.out.print("\tClean\n");
+			
+			printAdjacencyCellState(rooms.elementAt(i));
 		}
+		
+	}
+	
+	public void printAdjacencyCellState(Cell cell)
+	{
+		if(cell.nextUp == null)
+			System.out.println("\tUP side inexistant");
+		else
+			System.out.println("\tCell " + cell.nextUp.label + " on TOP");
+		
+		if(cell.nextLeft == null)
+			System.out.println("\tLEFT side inexistant");
+		else
+			System.out.println("\tCell " + cell.nextLeft.label + " at LEFT");
+		
+		if(cell.nextDown == null)
+			System.out.println("\tDOWN side inexistant");
+		else
+			System.out.println("\tCell " + cell.nextDown.label + " BELOW");
+		
+		if(cell.nextRight == null)
+			System.out.println("\tRIGHT side inexistant");
+		else
+			System.out.println("\tCell " + cell.nextLeft.label + " at RIGHT");
 	}
 	
 	public PhysicalEnvironment(String name)
@@ -54,24 +80,28 @@ public class PhysicalEnvironment extends AbstractEnvironment
 		if(flag == POSITIONS_FLAGS.UP)
 		{
 			rooms.elementAt(position).nextUp = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextDown = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted above Cell " + rooms.elementAt(position).label + "!");
 		}
 		else if(flag == POSITIONS_FLAGS.LEFT)
 		{
 			rooms.elementAt(position).nextLeft = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextRight = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted at the left from Cell " + rooms.elementAt(position).label + "!");
 		}
 		else if(flag == POSITIONS_FLAGS.DOWN)
 		{
 			rooms.elementAt(position).nextDown = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextUp = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted below Cell " + rooms.elementAt(position).label + "!");
 		}
 		else
 		{
 			rooms.elementAt(position).nextRight = rooms.elementAt(currentLastPosition);
+			rooms.elementAt(currentLastPosition).nextLeft = rooms.elementAt(position);
 			System.out.println("Cell " + rooms.elementAt(currentLastPosition).label + " was " +
 					"inserted at the right from Cell " + rooms.elementAt(position).label + "!");
 			

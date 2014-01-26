@@ -9,7 +9,7 @@ public class VacuumAgent
 {
 	private int score;
 	private int steps;
-	public static int TOTAL_STEPS = 1000;
+	public static int TOTAL_STEPS = 10;
 	public static int BAG_CAPACITY = 50;
 	private Memory memory;
 	
@@ -105,7 +105,7 @@ public class VacuumAgent
 		{
 			for (int i = 0; i < rooms.size(); ++i)
 			{
-				if(rooms.elementAt(i).state == false)
+				if(rooms.elementAt(i).state == true)//Remember that cell state true is dirty
 					return false;
 			}
 			return true;
@@ -122,6 +122,8 @@ public class VacuumAgent
 	private void suck()
 	{
 		System.out.println("Vacuum says: CLEANING...");
+		memory.currentCell.state = false;
+		memory.physicalCellReference.state = false;
 		steps++;
 		score++;
 	}
@@ -137,7 +139,7 @@ public class VacuumAgent
 	public boolean moveRandDirection()
 	{
 		int dir = memory.generateRand0_3();
-		System.out.println("DEBUG: Generated number 0_3: " + dir);
+		//System.out.println("DEBUG: Generated number 0_3: " + dir);
 		POSITIONS_FLAGS flag = null;
 		
 		System.out.println("Vacuum says: I'll move to a random direction");
@@ -176,13 +178,28 @@ public class VacuumAgent
 			else
 			{
 				if (flag == POSITIONS_FLAGS.UP)
+				{
 					memory.currentCell = memory.currentCell.nextUp;
+					memory.physicalCellReference = memory.physicalCellReference.nextUp;
+				}
 				else if(flag == POSITIONS_FLAGS.LEFT)
+				{
 					memory.currentCell = memory.currentCell.nextLeft;
+					memory.physicalCellReference = memory.physicalCellReference.nextLeft;
+				}
+					
 				else if(flag == POSITIONS_FLAGS.DOWN)
+				{
 					memory.currentCell = memory.currentCell.nextDown;
+					memory.physicalCellReference = memory.physicalCellReference.nextDown;
+				}
+					
 				else
+				{
 					memory.currentCell = memory.currentCell.nextRight;
+					memory.physicalCellReference = memory.physicalCellReference.nextRight;
+				}
+					
 				return true;
 			}
 			
@@ -306,11 +323,12 @@ public class VacuumAgent
 		checkEnvironmentCellState();
 		memory.printCells();
 		//main loop
-		System.out.println(memory.isEverythingClean());
-		while(!memory.isEverythingClean() || !memory.knowsWholeEnvironment())
+		while(!memory.isEverythingClean() || !memory.knowsWholeEnvironment() || steps < TOTAL_STEPS)
 		{
 			System.out.println("DEBUG: isEverythingClean: " + memory.isEverythingClean());
 			System.out.println("DEBUG: knowsWholeEnvironment: " + memory.knowsWholeEnvironment());
+			System.out.println("Vacuum says: I am in cell " + memory.currentCell.label);
+
 			boolean movState;
 			movState = moveRandDirection();
 			if(movState == true)
@@ -324,6 +342,7 @@ public class VacuumAgent
 			
 			System.out.println("Vacuum says: Memory after this round:");
 			memory.printCells();
+			new java.util.Scanner(System.in).nextLine();
 		}
 		
 	}

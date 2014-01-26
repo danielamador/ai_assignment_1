@@ -342,9 +342,10 @@ public class VacuumAgent
 			
 			System.out.println("Vacuum says: Memory after this round:");
 			memory.printCells();
+			System.out.println("PRESS ENTER TO CONTINUE");
 			new java.util.Scanner(System.in).nextLine();
 		}
-		
+		System.out.println("Vacuum says: I'm done in cleaning!");
 	}
 	
 	public void showMemory(){memory.printCells();}

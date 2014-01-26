@@ -44,7 +44,7 @@ public class PhysicalEnvironment extends AbstractEnvironment
 		if(cell.nextRight == null)
 			System.out.println("\tRIGHT side inexistant");
 		else
-			System.out.println("\tCell " + cell.nextLeft.label + " at RIGHT");
+			System.out.println("\tCell " + cell.nextRight.label + " at RIGHT");
 	}
 	
 	public PhysicalEnvironment(String name)

@@ -45,7 +45,7 @@ public class VacuumAgent
 			if(cell.adjacencyExistanceFlag[3] == false)
 				System.out.println("\tRIGHT side unknown");
 			else
-				System.out.println("\tCell " + cell.nextLeft.label + " at RIGHT");
+				System.out.println("\tCell " + cell.nextRight.label + " at RIGHT");
 		}
 		
 		@Override
@@ -206,7 +206,7 @@ public class VacuumAgent
 					memory.currentCell.adjacencyExistanceFlag[dir] = true;
 					memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
 					memory.currentCell.nextDown.checkedAdjacency[0] = true;
-					memory.currentCell.nextUp.adjacencyExistanceFlag[0] = true;
+					memory.currentCell.nextDown.adjacencyExistanceFlag[0] = true;
 					memory.physicalCellReference = memory.physicalCellReference.nextDown;
 					memory.currentCell = memory.currentCell.nextDown;
 					
@@ -222,8 +222,8 @@ public class VacuumAgent
 				{
 					memory.currentCell.adjacencyExistanceFlag[dir] = true;
 					memory.insertCell(memory.rooms.indexOf(memory.currentCell), flag);
-					memory.currentCell.nextRight.checkedAdjacency[3] = true;
-					memory.currentCell.nextRight.adjacencyExistanceFlag[3] = true;
+					memory.currentCell.nextRight.checkedAdjacency[1] = true;
+					memory.currentCell.nextRight.adjacencyExistanceFlag[1] = true;
 					memory.physicalCellReference = memory.physicalCellReference.nextRight;
 					memory.currentCell = memory.currentCell.nextRight;
 					

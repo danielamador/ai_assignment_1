@@ -114,6 +114,9 @@ public class VacuumAgent
 	{
 		memory.currentCell.label = memory.physicalCellReference.label;
 		memory.currentCell.state = memory.physicalCellReference.state;
+		System.out.println("Vacuum says: Checking Cell " + memory.currentCell.label + " state...");
+		steps++;
+
 	}
 	private void replaceBag(){}
 	private void suck()
@@ -161,7 +164,7 @@ public class VacuumAgent
 		}
 		
 		//if the vacuum knows the next cell in the direction, just move to there
-		System.out.println("\tDEBUG: checkedAdjacency[dir]: " + memory.currentCell.checkedAdjacency[dir]);
+		//System.out.println("\tDEBUG: checkedAdjacency[dir]: " + memory.currentCell.checkedAdjacency[dir]);
 		if(memory.currentCell.checkedAdjacency[dir] == true)
 		{
 			System.out.println("\tI know this direction already!");
@@ -325,8 +328,8 @@ public class VacuumAgent
 		//main loop
 		while((!memory.isEverythingClean() || !memory.knowsWholeEnvironment()) && steps < TOTAL_STEPS)
 		{
-			System.out.println("DEBUG: isEverythingClean: " + memory.isEverythingClean());
-			System.out.println("DEBUG: knowsWholeEnvironment: " + memory.knowsWholeEnvironment());
+			//System.out.println("DEBUG: isEverythingClean: " + memory.isEverythingClean());
+			//System.out.println("DEBUG: knowsWholeEnvironment: " + memory.knowsWholeEnvironment());
 			System.out.println("Vacuum says: I am in cell " + memory.currentCell.label);
 
 			moveTrialState movState;

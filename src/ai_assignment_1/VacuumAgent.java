@@ -324,6 +324,8 @@ public class VacuumAgent
 		memory.physicalCellReference = environment.rooms.elementAt(initialEnvRoom);
 		//Don't forget the label
 		checkEnvironmentCellState();
+		if(memory.currentCell.state == true)
+			suck();
 		memory.printCells();
 		//main loop
 		while((!memory.isEverythingClean() || !memory.knowsWholeEnvironment()) && steps < TOTAL_STEPS)

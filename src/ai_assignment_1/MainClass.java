@@ -10,7 +10,7 @@ public class MainClass
 		env1.insertCell(0, POSITIONS_FLAGS.RIGHT);
 		env1.rooms.elementAt(0).state = false;
 		env1.rooms.elementAt(1).state = false;
-		vacuum.start(env1, 0);
+//		vacuum.start(env1, 0);
 		vacuum.start(env1, 1);
 				
 //		PhysicalEnvironment env2 = new PhysicalEnvironment("First Clean");

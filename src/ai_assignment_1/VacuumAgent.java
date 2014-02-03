@@ -8,11 +8,11 @@ public class VacuumAgent
 	private int steps;
 	public static int TOTAL_STEPS = 1000;
 	public static int BAG_CAPACITY = 50;
-	private Memory memory;
+	public Memory memory;
 	
 	//This subclass will be the Vacuums memory. It will store and model it's memory
 	//while it will discovering a physical Environment
-	private class Memory extends AbstractEnvironment
+	public class Memory extends AbstractEnvironment
 	{
 		Cell currentCell;
 		//this reference will be needed to read the state of the physical environment
@@ -118,7 +118,6 @@ public class VacuumAgent
 		steps++;
 
 	}
-	private void replaceBag(){}
 	private void suck()
 	{
 		System.out.println("Vacuum says: CLEANING...");
@@ -310,13 +309,13 @@ public class VacuumAgent
 		memory = new Memory();
 	}
 	
-	public void start(PhysicalEnvironment environment, int initialEnvRoom)
+	public void start(PhysicalEnvironment environment, int initialEnvRoom, boolean periodicalDirty)
 	{
 		System.out.println("Vacuum says: Hello human! I'm ready to work!");
 			
 		if(initialEnvRoom > environment.rooms.size())
 		{
-			System.out.println("Vacuum couldn't be initialised. The referenced " +
+			System.out.println("Vacuum could not be initialised. The referenced " +
 					"room doesn't exist");
 			return;
 		}
@@ -357,9 +356,9 @@ public class VacuumAgent
 		showPerformance();
 	}
 	
+	
 	public void showMemory(){memory.printCells();}
 	
-	public void stop(){}
 	public void showPerformance()
 	{
 		System.out.println("Performance: " + steps + " steps\n" + score + " sucks");

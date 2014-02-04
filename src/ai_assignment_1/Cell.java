@@ -13,6 +13,7 @@ public class Cell {
 	//0 UP - 1 LEFT - 2 DOWN - 3 RIGHT
 	boolean adjacencyExistanceFlag [];
 	boolean checkedAdjacency [];
+	boolean knowState;
 	
 	public Cell ()
 	{

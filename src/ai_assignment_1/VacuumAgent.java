@@ -4,8 +4,9 @@ import java.util.Vector;
 
 public class VacuumAgent 
 {
-	private int score;
+	private int cleaningTimes;
 	private int steps;
+	private int score;
 	public static int TOTAL_STEPS = 1000;
 	public static int BAG_CAPACITY = 50;
 	public Memory memory;
@@ -21,6 +22,7 @@ public class VacuumAgent
 		public Memory()
 		{
 			super();
+			score = 0;
 		}
 		
 		public void printAdjacencyCellState(Cell cell)
@@ -76,10 +78,15 @@ public class VacuumAgent
 			for (int i = 0; i < rooms.size(); ++i)
 			{
 				System.out.println("Cell " + i + " (" + rooms.elementAt(i).label + "): ");
-				if (rooms.elementAt(i).state == true)
-					System.out.print("\tDirty\n");
+				if (rooms.elementAt(i).knowState)
+				{
+					if (rooms.elementAt(i).state == true)
+						System.out.print("\tDirty\n");
+					else
+						System.out.print("\tClean\n");
+				}
 				else
-					System.out.print("\tClean\n");
+					System.out.print("\tDoesn't know state\n");
 				
 				printAdjacencyCellState(rooms.elementAt(i));
 			}
@@ -94,6 +101,8 @@ public class VacuumAgent
 					if(rooms.elementAt(i).checkedAdjacency[j] == false)
 						return false;
 				}
+				if(rooms.elementAt(i).knowState == false)
+					return false;
 			}
 			return true;
 		}
@@ -108,12 +117,19 @@ public class VacuumAgent
 			return true;
 		}
 		
+		public void clearCellStates()
+		{
+			for(int i = 0; i < rooms.size(); ++i)
+				rooms.elementAt(i).knowState = false;
+		}
+		
 	}
 	
 	public void checkEnvironmentCellState()
 	{
 		memory.currentCell.label = memory.physicalCellReference.label;
 		memory.currentCell.state = memory.physicalCellReference.state;
+		memory.currentCell.knowState = true;
 		System.out.println("Vacuum says: Checking Cell " + memory.currentCell.label + " state...");
 		steps++;
 
@@ -124,7 +140,7 @@ public class VacuumAgent
 		memory.currentCell.state = false;
 		memory.physicalCellReference.state = false;
 		steps++;
-		score++;
+		cleaningTimes++;
 	}
 	
 	private void noOp()
@@ -327,12 +343,23 @@ public class VacuumAgent
 			suck();
 		memory.printCells();
 		//main loop
+		int limit = 25;
 		while((!memory.isEverythingClean() || !memory.knowsWholeEnvironment()) && steps < TOTAL_STEPS)
 		{
 			//System.out.println("DEBUG: isEverythingClean: " + memory.isEverythingClean());
 			//System.out.println("DEBUG: knowsWholeEnvironment: " + memory.knowsWholeEnvironment());
 			System.out.println("Vacuum says: I am in cell " + memory.currentCell.label);
-
+			System.out.println("Steps: " + steps);
+			
+			if(periodicalDirty == true && steps > limit)
+			{
+				System.out.println("DEBUG: Steps: " + steps);
+				environment.generateDirt();
+				memory.clearCellStates();
+				limit +=25;
+			}
+				
+			
 			moveTrialState movState;
 			movState = moveRandDirection();
 			while(movState == moveTrialState.KNOWN_WALL)
@@ -347,6 +374,7 @@ public class VacuumAgent
 					suck();
 			}
 			
+			score += memory.numberOfCleanCells();
 			System.out.println("Vacuum says: Memory after this round:");
 			memory.printCells();
 			System.out.println("PRESS ENTER TO CONTINUE");
@@ -361,8 +389,7 @@ public class VacuumAgent
 	
 	public void showPerformance()
 	{
-		System.out.println("Performance: " + steps + " steps\n" + score + " sucks");
-		float effect = (score/(float)steps) * 100;
-		System.out.println("Effectiveness: " + (effect) + "%");
+		System.out.println("Performance: " + steps + " steps\n" + score + " POINTS");
+
 	}
 }

@@ -39,6 +39,21 @@ abstract public class AbstractEnvironment
 		rooms.add(new Cell());
 	}
 	
+	public int numberOfCleanCells()
+	{
+		int count = 0;
+		for (int i = 0; i < rooms.size(); ++i)
+		{
+			if(rooms.elementAt(i).knowState == true)
+			{
+				if (rooms.elementAt(i).state == false)
+					++count;
+			}
+			
+		}
+		return count;
+	}
+	
 	public Cell insertCell(int position, POSITIONS_FLAGS flag)
 	{
 		if(position > rooms.size())

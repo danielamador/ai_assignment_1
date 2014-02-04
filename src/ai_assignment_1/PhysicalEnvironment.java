@@ -118,5 +118,6 @@ public class PhysicalEnvironment extends AbstractEnvironment
 			if(rooms.elementAt(i).state == false)
 				rooms.elementAt(i).state = generateRandBool();
 		}
+		System.out.println("DIRTY WAS GENERATED");
 	}
 }

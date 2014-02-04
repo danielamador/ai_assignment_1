@@ -15,7 +15,7 @@ public class Cell {
 	boolean checkedAdjacency [];
 	boolean knowState;
 	
-	public Cell ()
+	public Cell()
 	{
 		adjacencyExistanceFlag = new boolean [4];
 		checkedAdjacency = new boolean [4];
@@ -26,4 +26,5 @@ public class Cell {
 			checkedAdjacency[i] = false;
 		}
 	}
+	
 }

@@ -111,6 +111,18 @@ public class PhysicalEnvironment extends AbstractEnvironment
 
 	}
 	
+	@Override
+	public int numberOfCleanCells()
+	{
+		int count = 0;
+		for (int i = 0; i < rooms.size(); ++i)
+		{
+			if (rooms.elementAt(i).state == false)
+				++count;
+		}
+		return count;
+	}
+	
 	public void generateDirt()
 	{
 		for (int i = 0; i < rooms.size(); ++i)

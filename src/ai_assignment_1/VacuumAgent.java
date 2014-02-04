@@ -1,15 +1,16 @@
 package ai_assignment_1;
 import java.util.Vector;
 
+import org.omg.CORBA.Environment;
+
 
 public class VacuumAgent 
 {
-	private int cleaningTimes;
 	private int steps;
 	private int score;
 	public static int TOTAL_STEPS = 1000;
-	public static int BAG_CAPACITY = 50;
 	public Memory memory;
+	private PhysicalEnvironment envReference;
 	
 	//This subclass will be the Vacuums memory. It will store and model it's memory
 	//while it will discovering a physical Environment
@@ -68,7 +69,6 @@ public class VacuumAgent
 					System.out.println("\tCell " + cell.nextRight.label + " at Right");
 			}
 			
-			
 		}
 		
 		@Override
@@ -86,7 +86,7 @@ public class VacuumAgent
 						System.out.print("\tClean\n");
 				}
 				else
-					System.out.print("\tDoesn't know state\n");
+					System.out.print("\tState unknown\n");
 				
 				printAdjacencyCellState(rooms.elementAt(i));
 			}
@@ -123,6 +123,11 @@ public class VacuumAgent
 				rooms.elementAt(i).knowState = false;
 		}
 		
+		private void accumScore()
+		{
+			score += envReference.numberOfCleanCells();
+		}
+		
 	}
 	
 	public void checkEnvironmentCellState()
@@ -132,6 +137,7 @@ public class VacuumAgent
 		memory.currentCell.knowState = true;
 		System.out.println("Vacuum says: Checking Cell " + memory.currentCell.label + " state...");
 		steps++;
+		memory.accumScore();
 
 	}
 	private void suck()
@@ -140,12 +146,13 @@ public class VacuumAgent
 		memory.currentCell.state = false;
 		memory.physicalCellReference.state = false;
 		steps++;
-		cleaningTimes++;
+		memory.accumScore();
 	}
 	
 	private void noOp()
 	{
-		System.out.println("Vacuum says: I'll do nothing this time");
+		System.out.println("Vacuum says: This cell is already clean, so I'll do nothing this time");
+		memory.accumScore();
 	}
 	
 	//This is public just for testing purposes. It will be private later
@@ -325,8 +332,10 @@ public class VacuumAgent
 		memory = new Memory();
 	}
 	
-	public void start(PhysicalEnvironment environment, int initialEnvRoom, boolean periodicalDirty)
+	public void start(PhysicalEnvironment environment, int initialEnvRoom, boolean periodicalDirty, 
+			boolean envManuallyInserted)
 	{
+		envReference = environment;
 		System.out.println("Vacuum says: Hello human! I'm ready to work!");
 			
 		if(initialEnvRoom > environment.rooms.size())
@@ -335,16 +344,22 @@ public class VacuumAgent
 					"room doesn't exist");
 			return;
 		}
-		memory.currentCell = memory.rooms.elementAt(0);
+		if(envManuallyInserted)
+			memory.currentCell = memory.rooms.elementAt(initialEnvRoom);
+		else
+			memory.currentCell = memory.rooms.elementAt(0);
+		
 		memory.physicalCellReference = environment.rooms.elementAt(initialEnvRoom);
 		//Don't forget the label
 		checkEnvironmentCellState();
 		if(memory.currentCell.state == true)
 			suck();
+		else
+			noOp();
 		memory.printCells();
 		//main loop
 		int limit = 25;
-		while((!memory.isEverythingClean() || !memory.knowsWholeEnvironment()) && steps < TOTAL_STEPS)
+		while(steps < TOTAL_STEPS)
 		{
 			//System.out.println("DEBUG: isEverythingClean: " + memory.isEverythingClean());
 			//System.out.println("DEBUG: knowsWholeEnvironment: " + memory.knowsWholeEnvironment());
@@ -369,18 +384,21 @@ public class VacuumAgent
 			
 			if(movState == moveTrialState.MOVE_COMPLETE)
 			{
+				if(steps >= TOTAL_STEPS) break;
 				checkEnvironmentCellState();
+				if(steps >= TOTAL_STEPS) break;
 				if(memory.currentCell.state == true)
 					suck();
+				else
+					noOp();
 			}
 			
-			score += memory.numberOfCleanCells();
 			System.out.println("Vacuum says: Memory after this round:");
 			memory.printCells();
 			System.out.println("PRESS ENTER TO CONTINUE");
 			new java.util.Scanner(System.in).nextLine();
 		}
-		System.out.println("Vacuum says: I'm done in cleaning!");
+		System.out.println("Vacuum says: I'm done with cleaning!");
 		showPerformance();
 	}
 	
@@ -389,7 +407,7 @@ public class VacuumAgent
 	
 	public void showPerformance()
 	{
-		System.out.println("Performance: " + steps + " steps\n" + score + " POINTS");
+		System.out.println("Performance: " + steps + " steps, " + score + " Points");
 
 	}
 }

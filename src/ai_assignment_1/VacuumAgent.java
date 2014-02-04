@@ -1,7 +1,4 @@
 package ai_assignment_1;
-import java.util.Vector;
-
-import org.omg.CORBA.Environment;
 
 
 public class VacuumAgent 

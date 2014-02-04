@@ -1,7 +1,5 @@
 package ai_assignment_1;
 
-import java.util.Vector;
-
 public class MainClass 
 {
 
@@ -16,8 +14,8 @@ public class MainClass
 		env.insertCell(0, POSITIONS_FLAGS.RIGHT);
 		vacuum.memory.insertCell(0, POSITIONS_FLAGS.RIGHT);
 		
-		env.rooms.elementAt(0).state = false; //true for Second Clean and All Dirty
-		env.rooms.elementAt(1).state = false; //true for First Clean and All Dirty
+		env.rooms.elementAt(0).state = true; //true for Second Clean and All Dirty
+		env.rooms.elementAt(1).state = true; //true for First Clean and All Dirty
 		
 		for (int i = 0; i < 4; ++i)
 		{
@@ -37,8 +35,8 @@ public class MainClass
 		vacuum.memory.rooms.get(0).adjacencyExistanceFlag[3] = true;
 		vacuum.memory.rooms.get(1).adjacencyExistanceFlag[1] = true;
 		
-//		vacuum.start(env, 0, false, true);
-		vacuum.start(env, 1, false, true);
+		vacuum.start(env, 0, false, true);
+//		vacuum.start(env, 1, false, true);
 
 	}
 	
